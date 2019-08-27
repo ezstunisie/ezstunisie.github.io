@@ -1,56 +1,26 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+/*
+Tested working with PHP5.4 and above (including PHP 7 )
 
-$errorMSG = "";
+ */
+require_once './vendor/autoload.php';
 
-// NAME
-if (empty($_POST["name"])) {
-    $errorMSG = "Name is required ";
-} else {
-    $name = $_POST["name"];
-}
-
-// EMAIL
-if (empty($_POST["email"])) {
-    $errorMSG .= "Email is required ";
-} else {
-    $email = $_POST["email"];
-}
-
-// MESSAGE
-if (empty($_POST["message"])) {
-    $errorMSG .= "Message is required ";
-} else {
-    $message = $_POST["message"];
-}
+use FormGuide\Handlx\FormHandler;
 
 
-$EmailTo = "hazemzammit1@gmail.com";
-$Subject = "New Message Received";
+$pp = new FormHandler(); 
 
-// prepare email body text
-$Body = "";
-$Body .= "Name: ";
-$Body .= $name;
-$Body .= "\n";
-$Body .= "Email: ";
-$Body .= $email;
-$Body .= "\n";
-$Body .= "Message: ";
-$Body .= $message;
-$Body .= "\n";
+$validator = $pp->getValidator();
+$validator->fields(['name','email'])->areRequired()->maxLength(50);
+$validator->field('email')->isEmail();
+$validator->field('message')->maxLength(6000);
 
-// send email
-$success = mail($EmailTo, $Subject, $Body, "From:".$email);
 
-// redirect to success page
-if ($success && $errorMSG == ""){
-   echo "success";
-}else{
-    if($errorMSG == ""){
-        echo "Something went wrong :(";
-    } else {
-        echo $errorMSG;
-    }
-}
 
-?>
+
+$pp->sendEmailTo('hazemzammit1@gmail.com'); // ← Your email here
+
+echo $pp->process($_POST);
