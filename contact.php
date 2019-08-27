@@ -1,21 +1,56 @@
-<?php 
-    $name = $_POST['name'];
-    $visitor_email = $_POST['email'];
-    $message =$_POST['message'];
+<?php
+
+$errorMSG = "";
+
+// NAME
+if (empty($_POST["name"])) {
+    $errorMSG = "Name is required ";
+} else {
+    $name = $_POST["name"];
+}
+
+// EMAIL
+if (empty($_POST["email"])) {
+    $errorMSG .= "Email is required ";
+} else {
+    $email = $_POST["email"];
+}
+
+// MESSAGE
+if (empty($_POST["message"])) {
+    $errorMSG .= "Message is required ";
+} else {
+    $message = $_POST["message"];
+}
 
 
-     $email_form = 'hazemzammit1@gmail.com';
-         $email_subject = "new form submission";
-        $email_body = "user name: $name.\n";
-        $email_body = "user email: $visitor_email.\n";
-        $email_body = "user message: $message.\n";
+$EmailTo = "hazemzammit1@gmail.com";
+$Subject = "New Message Received";
 
-    $to ="hazemgithub@gmail.com";
-    $headers = "from: $email_from \r\n";
-    $headers =  "reply-to: $visitor_email \r\n";
-    mail($to,$email_subject,$email_body,$headers)  ;  
-    header ("location: contact.html");
-        
-        
-        
+// prepare email body text
+$Body = "";
+$Body .= "Name: ";
+$Body .= $name;
+$Body .= "\n";
+$Body .= "Email: ";
+$Body .= $email;
+$Body .= "\n";
+$Body .= "Message: ";
+$Body .= $message;
+$Body .= "\n";
+
+// send email
+$success = mail($EmailTo, $Subject, $Body, "From:".$email);
+
+// redirect to success page
+if ($success && $errorMSG == ""){
+   echo "success";
+}else{
+    if($errorMSG == ""){
+        echo "Something went wrong :(";
+    } else {
+        echo $errorMSG;
+    }
+}
+
 ?>
