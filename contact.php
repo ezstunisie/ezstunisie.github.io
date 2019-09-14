@@ -1,26 +1,31 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-/*
-Tested working with PHP5.4 and above (including PHP 7 )
-
- */
-require_once './vendor/autoload.php';
-
-use FormGuide\Handlx\FormHandler;
+    $to = 'hazemzammit1@gmail.com';
+    $firstname = $_POST["fname"];
+    $email= $_POST["email"];
+    $text= $_POST["message"];
+    $phone= $_POST["phone"];
+    
 
 
-$pp = new FormHandler(); 
+    $headers = 'MIME-Version: 1.0' . "\r\n";
+    $headers .= "From: " . $email . "\r\n"; // Sender's E-mail
+    $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
 
-$validator = $pp->getValidator();
-$validator->fields(['name','email'])->areRequired()->maxLength(50);
-$validator->field('email')->isEmail();
-$validator->field('message')->maxLength(6000);
+    $message ='<table style="width:100%">
+        <tr>
+            <td>'.$firstname.'  '.$laststname.'</td>
+        </tr>
+        <tr><td>Email: '.$email.'</td></tr>
+        <tr><td>phone: '.$phone.'</td></tr>
+        <tr><td>Text: '.$text.'</td></tr>
+        
+    </table>';
 
+    if (@mail($to, $email, $message, $headers))
+    {
+        echo 'The message has been sent.';
+    }else{
+        echo 'failed';
+    }
 
-
-
-$pp->sendEmailTo('hazemzammit1@gmail.com'); // ← Your email here
-
-echo $pp->process($_POST);
+?>
